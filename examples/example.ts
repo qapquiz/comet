@@ -1,7 +1,7 @@
 import { Connection } from "@solana/web3.js";
 import { getCurrentSolPrice, getSolPriceByTimestamp } from "../solPrice";
 
-const connection = new Connection(process.env.RPC_URL!);
+const connection = new Connection("https://api.mainnet.solana.com");
 const currentPrice = await getCurrentSolPrice({
 	connection,
 });

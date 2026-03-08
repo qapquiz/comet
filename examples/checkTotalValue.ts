@@ -56,7 +56,7 @@ function printTotals(totals: TotalValues, summaries: PositionSummary[]): void {
 	console.log("─".repeat(40) + "\n");
 }
 
-const connection = new Connection(process.env.RPC_URL!);
+const connection = new Connection("https://api.mainnet.solana.com");
 const walletAddress = new PublicKey(
 	"87bdcSg4zvjExbvsUSbGifYUp75JdLhLafjgwvCjzjkA",
 );
