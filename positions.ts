@@ -29,6 +29,9 @@ interface PositionSummary {
 	unclaimedFeeY: number;
 	claimedFeeX: number;
 	claimedFeeY: number;
+	depositValueInSol: number;
+	unclaimedFeeValueInSol: number;
+	claimedFeeValueInSol: number;
 }
 
 async function getAllUserPositions(
@@ -73,13 +76,17 @@ function getLbPairWithLbPositions(
 
 async function getPositionSummaries(
 	positions: Map<string, PositionInfo>,
+	connection: Connection,
 ): Promise<PositionSummary[]> {
 	const positionsByPair = getLbPairWithLbPositions(positions);
 	const summaries: PositionSummary[] = [];
+	const SOL_MINT = "So11111111111111111111111111111111111111112";
 
 	for (const [pairAddress, metPosition] of Object.entries(positionsByPair)) {
 		const tokenXDecimal = metPosition.tokenX.mint.decimals;
 		const tokenYDecimal = metPosition.tokenY.mint.decimals;
+		const tokenXMint = metPosition.tokenX.mint.address.toBase58();
+		const tokenYMint = metPosition.tokenY.mint.address.toBase58();
 
 		let totalTokenX = BigInt(0);
 		let totalTokenY = BigInt(0);
@@ -99,17 +106,50 @@ async function getPositionSummaries(
 			totalClaimedFeeY += BigInt(position.positionData.totalClaimedFeeYAmount);
 		}
 
+		const tokenXAmount = Number(totalTokenX) / 10 ** tokenXDecimal;
+		const tokenYAmount = Number(totalTokenY) / 10 ** tokenYDecimal;
+		const unclaimedFeeX = Number(totalUnclaimedFeeX) / 10 ** tokenXDecimal;
+		const unclaimedFeeY = Number(totalUnclaimedFeeY) / 10 ** tokenYDecimal;
+		const claimedFeeX = Number(totalClaimedFeeX) / 10 ** tokenXDecimal;
+		const claimedFeeY = Number(totalClaimedFeeY) / 10 ** tokenYDecimal;
+
+		let depositValueInSol = 0;
+		let unclaimedFeeValueInSol = 0;
+		let claimedFeeValueInSol = 0;
+		const isTokenXSol = tokenXMint === SOL_MINT;
+		const isTokenYSol = tokenYMint === SOL_MINT;
+
+		if (isTokenXSol || isTokenYSol) {
+			const dlmmPool = await DLMM.create(connection, new PublicKey(pairAddress));
+			const activeBin = await dlmmPool.getActiveBin();
+			const pricePerLamport = Number(activeBin.pricePerToken);
+
+
+			if (isTokenXSol) {
+				depositValueInSol = tokenXAmount + tokenYAmount * pricePerLamport;
+				unclaimedFeeValueInSol = unclaimedFeeX + unclaimedFeeY * pricePerLamport;
+				claimedFeeValueInSol = claimedFeeX + claimedFeeY * pricePerLamport;
+			} else {
+				depositValueInSol = tokenYAmount + tokenXAmount * pricePerLamport;
+				unclaimedFeeValueInSol = unclaimedFeeY + unclaimedFeeX * pricePerLamport;
+				claimedFeeValueInSol = claimedFeeY + claimedFeeX * pricePerLamport;
+			}
+		}
+
 		summaries.push({
 			pairAddress,
 			positionAddresses,
-			tokenXMint: metPosition.tokenX.mint.address.toBase58(),
-			tokenYMint: metPosition.tokenY.mint.address.toBase58(),
-			tokenXAmount: Number(totalTokenX) / 10 ** tokenXDecimal,
-			tokenYAmount: Number(totalTokenY) / 10 ** tokenYDecimal,
-			unclaimedFeeX: Number(totalUnclaimedFeeX) / 10 ** tokenXDecimal,
-			unclaimedFeeY: Number(totalUnclaimedFeeY) / 10 ** tokenYDecimal,
-			claimedFeeX: Number(totalClaimedFeeX) / 10 ** tokenXDecimal,
-			claimedFeeY: Number(totalClaimedFeeY) / 10 ** tokenYDecimal,
+			tokenXMint,
+			tokenYMint,
+			tokenXAmount,
+			tokenYAmount,
+			unclaimedFeeX,
+			unclaimedFeeY,
+			claimedFeeX,
+			claimedFeeY,
+			depositValueInSol,
+			unclaimedFeeValueInSol,
+			claimedFeeValueInSol,
 		});
 	}
 
