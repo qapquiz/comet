@@ -7,21 +7,9 @@ import {
 	type PositionSummary,
 } from "./positions";
 import type { PositionInfo } from "@meteora-ag/dlmm";
+import type { InitialDeposit } from "./initialDeposit";
 
 const SOL_MINT = "So11111111111111111111111111111111111111112";
-
-interface InitialDeposit {
-	positionAddress: string;
-	pairAddress: string;
-	transactionSignature: string;
-	timestamp: number;
-	tokenXAmount: number;
-	tokenYAmount: number;
-	tokenXMint: string;
-	tokenYMint: string;
-	valueInSol: number;
-	valueInUsd: number | null;
-}
 
 interface GetInitialDepositsHeliusParams {
 	connection: Connection;
@@ -245,5 +233,6 @@ async function getInitialDepositsHelius(
 	return initialDeposits;
 }
 
-export type { InitialDeposit, GetInitialDepositsHeliusParams };
+export type { GetInitialDepositsHeliusParams };
 export { getInitialDepositsHelius };
+export type { InitialDeposit } from "./initialDeposit";

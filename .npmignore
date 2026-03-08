@@ -1,9 +1,15 @@
 .env
+.env.*
 *.ts
 !dist/**/*.d.ts
 tsconfig.json
 node_modules
 .git
-gitignore
+.gitignore
 AGENTS.md
 bun.lock
+bun.lockb
+examples
+__tests__
+*.test.ts
+*.spec.ts

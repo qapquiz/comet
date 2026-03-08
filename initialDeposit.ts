@@ -98,10 +98,10 @@ async function getInitialDeposits(
 			);
 			const poolData = dlmmPool.lbPair;
 
-			if (poolData?.tokenXMarketInfo?.reserve) {
+			if (dlmmPool.tokenX?.reserve && dlmmPool.tokenY?.reserve) {
 				pairToVaults.set(pairAddress, {
-					tokenXVault: poolData.tokenXMarketInfo.reserve.toBase58(),
-					tokenYVault: poolData.tokenYMarketInfo.reserve.toBase58(),
+					tokenXVault: dlmmPool.tokenX.reserve.toBase58(),
+					tokenYVault: dlmmPool.tokenY.reserve.toBase58(),
 				});
 			}
 		} catch (e) {

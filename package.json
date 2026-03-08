@@ -1,5 +1,5 @@
 {
-  "name": "comet",
+  "name": "@armariya/comet",
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,28 +11,41 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
-  "description": "Fetch SOL/USDC price data from Meteora DLMM pools with OHLCV support",
+  "description": "Analyze Solana DeFi positions from Meteora DLMM pools with OHLCV support, position tracking, and PnL calculations",
   "keywords": [
     "solana",
     "meteora",
     "dlmm",
     "defi",
     "ohlcv",
-    "price"
+    "price",
+    "positions",
+    "pnl",
+    "liquidity",
+    "amm"
   ],
   "license": "MIT",
   "author": "armariya",
   "repository": {
     "type": "git",
-    "url": "https://github.com/qapquiz/comet"
+    "url": "git+https://github.com/qapquiz/comet.git"
+  },
+  "homepage": "https://github.com/qapquiz/comet#readme",
+  "bugs": {
+    "url": "https://github.com/qapquiz/comet/issues"
   },
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build"
   },
   "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
