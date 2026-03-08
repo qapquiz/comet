@@ -1,6 +1,6 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getAllUserPositions, getPositionSummaries } from "./positions";
-import { getInitialDeposits } from "./initialDeposit";
+import { getInitialDepositsHelius } from "./initialDepositHelius";
 
 interface UpnlResult {
 	initialDepositInSol: number;
@@ -15,11 +15,12 @@ interface UpnlResult {
 interface GetUpnlParams {
 	connection: Connection;
 	walletAddress: PublicKey;
-	maxSignatures?: number;
+	heliusApiKey: string;
+	maxTransactions?: number;
 }
 
 async function getUpnl(params: GetUpnlParams): Promise<UpnlResult | null> {
-	const { connection, walletAddress, maxSignatures } = params;
+	const { connection, walletAddress, heliusApiKey, maxTransactions } = params;
 
 	const positions = await getAllUserPositions({ connection, walletAddress });
 	if (!positions) {
@@ -27,10 +28,11 @@ async function getUpnl(params: GetUpnlParams): Promise<UpnlResult | null> {
 	}
 
 	const summaries = await getPositionSummaries(positions, connection);
-	const deposits = await getInitialDeposits({
+	const deposits = await getInitialDepositsHelius({
 		connection,
 		walletAddress,
-		maxSignatures,
+		heliusApiKey,
+		maxTransactions,
 		positions,
 		summaries,
 	});

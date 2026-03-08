@@ -4,25 +4,19 @@ import { getUpnl } from "../upnl";
 const connection = new Connection("https://api.mainnet.solana.com");
 
 const walletAddress = process.argv[2];
-if (!walletAddress) {
-	console.error("Usage: bun run getUpnlBestPath.ts <wallet_address>");
+const heliusApiKey = process.argv[3];
+if (!walletAddress || !heliusApiKey) {
+	console.error("Usage: bun run getUpnlBestPath.ts <wallet_address> <helius_api_key>");
 	process.exit(1);
 }
 
 const wallet = new PublicKey(walletAddress);
 
 /*
- * BEST PATH - getUpnl() internally deduplicates RPC calls
- *
- * RPC calls (for 1 pair, 50 signatures):
- * 1. getAllUserPositions:     ~5-10 calls
- * 2. getPositionSummaries:    ~6-7 calls (DLMM.create + getActiveBin)
- * 3. getInitialDeposits:      ~56 calls (DLMM.create + getSignatures + 50 getParsedTx)
- *
- * Total: ~67-73 RPC calls
+ * Uses Helius for faster transaction parsing with more accurate price data
  */
 
-const result = await getUpnl({ connection, walletAddress: wallet });
+const result = await getUpnl({ connection, walletAddress: wallet, heliusApiKey });
 
 if (!result) {
 	console.log("No positions found");

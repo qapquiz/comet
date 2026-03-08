@@ -40,7 +40,7 @@ const historicalPrice = await getSolPriceByTimestamp({
 });
 
 // Get UPnL for wallet positions
-const upnl = await getUpnl({ connection, walletAddress });
+const upnl = await getUpnl({ connection, walletAddress, heliusApiKey });
 ```
 
 ## API
@@ -151,7 +151,8 @@ Calculate Unrealized PnL comparing current values vs initial deposits.
 const result = await getUpnl({
 	connection,
 	walletAddress: PublicKey,
-	maxSignatures?: number,
+	heliusApiKey: string,
+	maxTransactions?: number,
 });
 // Returns: UpnlResult | null
 ```
@@ -172,7 +173,7 @@ See the `examples/` directory for usage examples:
 - `example.ts` - Basic SOL price fetching
 - `getPositionsExample.ts` - Fetch and display user positions
 - `getInitialDepositExample.ts` - Find initial deposits for positions
-- `getUpnlBestPath.ts` - Calculate UPnL for a wallet
+- `getUpnlBestPath.ts` - Calculate UPnL for a wallet (requires Helius API key)
 - `checkTotalValue.ts` - Calculate total value breakdown
 
 ## Environment
