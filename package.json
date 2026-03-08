@@ -1,6 +1,37 @@
 {
   "name": "comet",
-  "module": "index.ts",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "description": "Fetch SOL/USDC price data from Meteora DLMM pools with OHLCV support",
+  "keywords": [
+    "solana",
+    "meteora",
+    "dlmm",
+    "defi",
+    "ohlcv",
+    "price"
+  ],
+  "license": "MIT",
+  "author": "armariya",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qapquiz/comet"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest"
