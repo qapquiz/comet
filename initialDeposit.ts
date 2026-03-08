@@ -1,7 +1,11 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getSolPriceByTimestamp } from "./solPrice";
-import { getAllUserPositions, getPositionSummaries } from "./positions";
-import DLMM from "@meteora-ag/dlmm";
+import {
+	getAllUserPositions,
+	getPositionSummaries,
+	type PositionSummary,
+} from "./positions";
+import DLMM, { type PositionInfo } from "@meteora-ag/dlmm";
 
 const SOL_MINT = "So11111111111111111111111111111111111111111112";
 
@@ -22,6 +26,8 @@ interface GetInitialDepositsParams {
 	connection: Connection;
 	walletAddress: PublicKey;
 	maxSignatures?: number;
+	positions?: Map<string, PositionInfo>;
+	summaries?: PositionSummary[];
 }
 
 function findPositionInAccounts(
@@ -43,15 +49,21 @@ async function sleep(ms: number): Promise<void> {
 async function getInitialDeposits(
 	params: GetInitialDepositsParams,
 ): Promise<Map<string, InitialDeposit>> {
-	const { connection, walletAddress, maxSignatures = 500 } = params;
+	const {
+		connection,
+		walletAddress,
+		maxSignatures = 500,
+		positions: providedPositions,
+		summaries: providedSummaries,
+	} = params;
 
-	const positions = await getAllUserPositions({ connection, walletAddress });
+	const positions = providedPositions ?? (await getAllUserPositions({ connection, walletAddress }));
 	if (!positions) {
 		console.log("No positions found");
 		return new Map();
 	}
 
-	const summaries = await getPositionSummaries(positions, connection);
+	const summaries = providedSummaries ?? (await getPositionSummaries(positions, connection));
 
 	const positionToPair = new Map<string, string>();
 	const pairToMints = new Map<

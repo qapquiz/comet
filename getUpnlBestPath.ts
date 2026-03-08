@@ -11,11 +11,22 @@ const connection = new Connection(RPC_URL);
 
 const walletAddress = process.argv[2];
 if (!walletAddress) {
-	console.error("Usage: bun run getUpnlExample.ts <wallet_address>");
+	console.error("Usage: bun run getUpnlBestPath.ts <wallet_address>");
 	process.exit(1);
 }
 
 const wallet = new PublicKey(walletAddress);
+
+/*
+ * BEST PATH - getUpnl() internally deduplicates RPC calls
+ *
+ * RPC calls (for 1 pair, 50 signatures):
+ * 1. getAllUserPositions:     ~5-10 calls
+ * 2. getPositionSummaries:    ~6-7 calls (DLMM.create + getActiveBin)
+ * 3. getInitialDeposits:      ~56 calls (DLMM.create + getSignatures + 50 getParsedTx)
+ *
+ * Total: ~67-73 RPC calls
+ */
 
 const result = await getUpnl({ connection, walletAddress: wallet });
 

@@ -31,6 +31,8 @@ async function getUpnl(params: GetUpnlParams): Promise<UpnlResult | null> {
 		connection,
 		walletAddress,
 		maxSignatures,
+		positions,
+		summaries,
 	});
 
 	const currentValueInSol = summaries.reduce(
