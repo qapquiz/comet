@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getUpnl } from "./upnl";
+import { getUpnl } from "../upnl";
 
 const RPC_URL = process.env.HELIUS_RPC_URL || process.env.RPC_URL;
 if (!RPC_URL) {

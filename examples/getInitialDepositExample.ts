@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getInitialDeposits } from "./initialDeposit";
+import { getInitialDeposits } from "../initialDeposit";
 
 const RPC_URL = process.env.HELIUS_RPC_URL || process.env.RPC_URL;
 

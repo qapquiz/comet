@@ -3,7 +3,7 @@ import {
 	getAllUserPositions,
 	getPositionSummaries,
 	type PositionSummary,
-} from "./positions";
+} from "../positions";
 
 function printPositionSummaries(summaries: PositionSummary[]): void {
 	for (const summary of summaries) {

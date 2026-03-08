@@ -3,7 +3,7 @@ import {
 	getAllUserPositions,
 	getPositionSummaries,
 	type PositionSummary,
-} from "./positions";
+} from "../positions";
 
 interface TotalValues {
 	totalDepositValueInSol: number;
