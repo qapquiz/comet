@@ -1,6 +1,6 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import DLMM from "@meteora-ag/dlmm";
-import { fetchOHLCV, getLatestCandle } from "./ohlcv";
+import { getPairPriceByTimestamp } from "./ohlcv";
 
 const SOL_USDC_POOL = new PublicKey(
 	"BGm1tav58oGcsQJehL9WXBFXF7D27vZsKefj4xJKD5Y",
@@ -44,25 +44,8 @@ async function getSolPriceByTimestamp(
 	const { poolAddress = SOL_USDC_POOL, timestamp, timeframe = "1h" } = params;
 
 	try {
-		const ohlcvData = await fetchOHLCV({
-			poolAddress,
-			timeframe,
-			endTime: timestamp,
-		});
-
-		if (!ohlcvData) {
-			console.error("Failed to fetch OHLCV data");
-			return null;
-		}
-
-		const candle = getLatestCandle(ohlcvData);
-
-		if (!candle) {
-			console.error("No candle found for the given timestamp");
-			return null;
-		}
-
-		return candle.close;
+		const result = await getPairPriceByTimestamp(poolAddress, timestamp, timeframe);
+		return result?.price ?? null;
 	} catch (error) {
 		console.error(`Failed to get SOL price by timestamp: ${error}`);
 		return null;

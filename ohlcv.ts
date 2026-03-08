@@ -18,16 +18,22 @@ interface OHLCVResponse {
 }
 
 interface FetchOHLCVParams {
-	poolAddress: PublicKey;
+	poolAddress: PublicKey | string;
 	timeframe?: string;
 	endTime?: number;
+}
+
+interface PairPrice {
+	price: number;
+	poolAddress: string;
 }
 
 async function fetchOHLCV(
 	params: FetchOHLCVParams,
 ): Promise<OHLCVResponse | null> {
 	const { poolAddress, timeframe = "1h", endTime } = params;
-	const url = `https://dlmm.datapi.meteora.ag/pools/${poolAddress.toString()}/ohlcv?timeframe=${timeframe}${endTime ? `&end_time=${endTime}` : ""}`;
+	const address = typeof poolAddress === "string" ? poolAddress : poolAddress.toString();
+	const url = `https://dlmm.datapi.meteora.ag/pools/${address}/ohlcv?timeframe=${timeframe}${endTime ? `&end_time=${endTime}` : ""}`;
 
 	try {
 		const response = await fetch(url);
@@ -46,5 +52,36 @@ function getLatestCandle(ohlcvData: OHLCVResponse): OHLCVCandle | null {
 	return null;
 }
 
-export type { OHLCVCandle, OHLCVResponse, FetchOHLCVParams };
-export { fetchOHLCV, getLatestCandle };
+async function getPairPriceByTimestamp(
+	poolAddress: PublicKey | string,
+	timestamp: number,
+	timeframe: string = "1h",
+): Promise<PairPrice | null> {
+	const ohlcv = await fetchOHLCV({
+		poolAddress,
+		timeframe,
+		endTime: timestamp,
+	});
+
+	if (!ohlcv) return null;
+
+	const candle = getLatestCandle(ohlcv);
+	if (!candle) return null;
+
+	return {
+		price: candle.close,
+		poolAddress: typeof poolAddress === "string" ? poolAddress : poolAddress.toString(),
+	};
+}
+
+export type {
+	OHLCVCandle,
+	OHLCVResponse,
+	FetchOHLCVParams,
+	PairPrice,
+};
+export {
+	fetchOHLCV,
+	getLatestCandle,
+	getPairPriceByTimestamp,
+};
