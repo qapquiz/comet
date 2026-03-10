@@ -1,0 +1,61 @@
+{
+	"name": "comet",
+	"version": "0.1.0",
+	"description": "Meteora DLMM helper",
+	"homepage": "https://github.com/qapquiz/comet#readme",
+	"bugs": {
+		"url": "https://github.com/qapquiz/comet/issues"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/qapquiz/comet.git"
+	},
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		},
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"build": "bunup",
+		"dev": "bunup --watch",
+		"format": "oxfmt",
+		"lint": "oxlint",
+		"prepare": "bun simple-git-hooks",
+		"release": "bumpp --commit --push --tag",
+		"test": "bun test",
+		"test:coverage": "bun test --coverage",
+		"test:watch": "bun test --watch",
+		"type-check": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.3.10",
+		"bumpp": "^10.4.1",
+		"bunup": "^0.16.31",
+		"oxfmt": "^0.36.0",
+		"oxlint": "^1.51.0",
+		"simple-git-hooks": "^2.13.1",
+		"typescript": "^5.9.3"
+	},
+	"peerDependencies": {
+		"typescript": ">=4.5.0"
+	},
+	"peerDependenciesMeta": {
+		"typescript": {
+			"optional": true
+		}
+	},
+	"simple-git-hooks": {
+		"pre-commit": "bun run lint && bun run type-check"
+	}
+}
