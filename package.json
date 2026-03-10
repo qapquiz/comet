@@ -1,15 +1,15 @@
 {
-	"name": "comet",
-	"version": "0.1.1",
+	"name": "metcomet",
+	"version": "0.1.2",
 	"description": "Meteora DLMM helper",
-	"homepage": "https://github.com/qapquiz/comet#readme",
+	"homepage": "https://github.com/qapquiz/metcomet#readme",
 	"bugs": {
-		"url": "https://github.com/qapquiz/comet/issues"
+		"url": "https://github.com/qapquiz/metcomet/issues"
 	},
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/qapquiz/comet.git"
+		"url": "git+https://github.com/qapquiz/metcomet.git"
 	},
 	"files": [
 		"dist"
